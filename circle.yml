@@ -7,3 +7,11 @@ deployment:
     branch: development
     heroku:
       appname: phn-qol-survey-development
+  staging:
+    branch: staging
+    heroku:
+      appname: phn-qol-survey-staging
+  master:
+    branch: master
+    heroku:
+      appname: phn-qol-survey
