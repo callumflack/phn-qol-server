@@ -5,8 +5,7 @@ machine:
 test:
   override:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit
-    - export MOCHA_FILE=$CIRCLE_TEST_REPORTS/junit/results.xml
-    - node_modules/mocha/bin/mocha --reporter mocha-junit-reporter
+    - MOCHA_FILE=$CIRCLE_TEST_REPORTS/junit/results.xml node_modules/mocha/bin/mocha --reporter mocha-junit-reporter
 
 deployment:
   development:
