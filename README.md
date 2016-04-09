@@ -10,4 +10,4 @@ The server is an implementation of REST, issuing [JWT](https://jwt.io/) tokens f
 There is no front-end for this server instance- please see the API documentation for usage details.
 
 # License
-Copyright (c) Patternworks, All rights reserved Unauthorised copying of this file, via any medium is strictly prohibited. Proprietary and confidential. Written by Kashi Samaraweera <kashi@kashis.com.au>, 2016.
+Copyright (c) Patternworks, All rights reserved Unauthorised copying of this file, via any medium is strictly prohibited. Proprietary and confidential. Written by Kashi Samaraweera &lt;kashi@kashis.com.au&gt;, 2016.
