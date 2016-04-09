@@ -9,5 +9,17 @@ The server is an implementation of REST, issuing [JWT](https://jwt.io/) tokens f
 
 There is no front-end for this server instance- please see the API documentation for usage details.
 
+## Instances
+This web application will be split across multiple instances, `development`, `staging` and `master` for deployment. Each of these instances has a separate endpoint and dataset, and synchronisation between instances will be managed using git branching.
+
+### Branch `master` ([https://phn-qol-survey.herokuapp.com/](https://phn-qol-survey.herokuapp.com/))
+The master branch is the production version of the web application, hosted on the main domain. Any commits to master which is then pushed to GitHub will trigger a Circle CI build. If the build passess successfully, then the changes will automatically be deployed to the production site.
+
+### Branch `staging` ([https://phn-qol-survey-staging.herokuapp.com/](https://phn-qol-survey-staging.herokuapp.com/))
+The staging branch is used to manage changes that are ready for or pending preparation for deployment to the `master` branch. The deployment process for the staging branch is identical to that of the master branch (although deployment is sent to a different domain name).
+
+### Brnach `development`
+The development (_dev_) branch is used to synchronise development and feature extensions between collaborators. At present, the dev repository is being used to effect Circle CI integration. It may or may not survive v1.0.
+
 # License
 Copyright (c) Patternworks, All rights reserved Unauthorised copying of this file, via any medium is strictly prohibited. Proprietary and confidential. Written by Kashi Samaraweera &lt;kashi@kashis.com.au&gt;, 2016.
