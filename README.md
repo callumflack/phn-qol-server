@@ -10,7 +10,7 @@ The server is an implementation of REST, issuing [JWT](https://jwt.io/) tokens f
 There is no front-end for this server instance- please see the API documentation for usage details.
 
 ## Data definition
-![Entity-Relationship Diagram](phn-qol-server/docs/database/entity-relationship-diagram.png)
+![Entity-Relationship Diagram](docs/database/entity-relationship-diagram.png?raw=true)
 
 Assumptions have been made regarding the data collected during the device registration process and supplied by PHN for each provider.
 
