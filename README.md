@@ -9,6 +9,11 @@ The server is an implementation of REST, issuing [JWT](https://jwt.io/) tokens f
 
 There is no front-end for this server instance- please see the API documentation for usage details.
 
+## Data definition
+[!Entity-Relationship Diagram](phn-qol-server/docs/database/entity-relationship-diagram.png)
+
+Assumptions have been made regarding the data collected during the device registration process and supplied by PHN for each provider.
+
 ## Instances
 This web application will be split across multiple instances, `development`, `staging` and `master` for deployment. Each of these instances has a separate endpoint and dataset, and synchronisation between instances will be managed using git branching.
 
