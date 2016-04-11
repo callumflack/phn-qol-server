@@ -23,8 +23,8 @@ The master branch is the production version of the web application, hosted on th
 ### Branch `staging` ([https://phn-qol-survey-staging.herokuapp.com/](https://phn-qol-survey-staging.herokuapp.com/))
 The staging branch is used to manage changes that are ready for or pending preparation for deployment to the `master` branch. The deployment process for the staging branch is identical to that of the master branch (although deployment is sent to a different domain name).
 
-### Brnach `development`
-The development (_dev_) branch is used to synchronise development and feature extensions between collaborators. At present, the dev repository is being used to effect Circle CI integration. It may or may not survive v1.0.
+### Branch `development` ([https://phn-qol-survey-development.herokuapp.com/](https://phn-qol-survey-development.herokuapp.com/))
+The development (_dev_) branch is used to synchronise development and feature extensions between collaborators. At present, the dev repository is being used to effect Circle CI integration. It may or may not survive v1.0 but nonetheless is automated for continuous delivery during development.
 
 # License
 Copyright (c) Patternworks, All rights reserved Unauthorised copying of this file, via any medium is strictly prohibited. Proprietary and confidential. Written by Kashi Samaraweera &lt;kashi@kashis.com.au&gt;, 2016.
