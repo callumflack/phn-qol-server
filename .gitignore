@@ -35,4 +35,8 @@ node_modules
 # IDE-specific code
 .vscode/
 
+# Circle-CI Test Output
 test-results.xml
+
+# SQL Architect temporary files
+*.architect~
