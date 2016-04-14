@@ -19,9 +19,19 @@ module.exports = function() {
     describe('Database connectivity', function() {
         
         it('Database connection established', function(done) {
-            assert.isTrue(true);
-            done();
+            this.timeout(10000);
+            const dbConn = {
+                host: process.env.DB_HOSTNAME,
+                database: process.env.DB_DATABASE,
+                user: process.env.DB_USERNAME,
+                password: process.env.DB_PASSWORD,
+                port: process.env.DB_PORT || 5432,
+                ssl: process.env.DB_SSL==="true" || false
+            };
+            const pgdb = pg()(dbConn);
+            pgdb.query("SELECT * FROM information_schema.tables;")
+                .then(_ => done())
+                .catch(done);
         });
-            
     });   
 }
