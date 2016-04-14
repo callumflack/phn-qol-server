@@ -1,2 +1,2 @@
---require supertest
 --require babel-core/register
+--require supertest
