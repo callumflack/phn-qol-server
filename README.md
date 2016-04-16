@@ -44,4 +44,4 @@ Integration tests can be found in the `integration/` directory. They are similar
 A higher-level suite of tests exist in the `system/` directory, responsible for verifying that the necessary parts of the system are online and working. An example of this may be confirmation of database connectivity, SQL script execution, etc.
 
 # License
-Copyright (c) Patternworks, All rights reserved Unauthorised copying of this file, via any medium is strictly prohibited. Proprietary and confidential. Written by Kashi Samaraweera &lt;kashi@kashis.com.au&gt;, 2016.
+Copyright (c) Patternworks 2016, All rights reserved. Unauthorised copying of this file, via any medium is strictly prohibited. Proprietary and confidential. Written by Kashi Samaraweera &lt;kashi@kashis.com.au&gt;.
