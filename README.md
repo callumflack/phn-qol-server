@@ -38,7 +38,7 @@ Unit tests are arranged into their components within the `unit/` directory. By d
 Typically the unit being tested will be a single JavaScript file (imported or required in), and all tests that apply to that file will be stored in a similarly-named file within the `test/` directory. Please note, whilst the JavaScript files being tested may import their own libraries, a unit test suite for that file will only be concerned with the methods exported by the module, and not the libraries being used.
 
 ### Integration testing
-Integration tests can be found in the `integration/` directory. They are similar to unit tests however observe the behaviours of systems where multiple files or libraries are coordinated to produce an output. Typically, this will be testing the Express.js server to see that a given HTTP request produces an expected response (either header information, body information or both). Directory organisation of these tests are TBC.
+Integration tests can be found in the `integration/` directory. They are similar to unit tests however observe the behaviours of systems where multiple files or libraries are coordinated to produce an output. Typically, this will be testing the Express.js server to see that a given HTTP request produces an expected response (either header information, body information or both).
 
 ### System testing
 A higher-level suite of tests exist in the `system/` directory, responsible for verifying that the necessary parts of the system are online and working. An example of this may be confirmation of database connectivity, SQL script execution, etc.
