@@ -35,7 +35,7 @@ node_modules
 # IDE-specific code
 .vscode/
 .idea/
-.jsconfig.json
+jsconfig.json
 
 # Circle-CI Test Output
 test-results.xml

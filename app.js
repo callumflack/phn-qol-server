@@ -1,10 +1,28 @@
+/**
+ * Primary Health Networks Quality of Life Survey
+ * 
+ * This Express.js web application manages the storage and retrieval of data for
+ * the PHN QoL Survey, as implemented by Patternworks in Q2, 2016. See README.md
+ * for detailed information about the web app.
+ * 
+ * Extensive testing is conducted using Mocha, see the `test/` directory for the
+ * test scheduler. This is vital for the continuous delivery model that this app
+ * uses for maintenance, feature extensions, etc.
+ * 
+ * @author Kashi Samaraweera <kashi@kashis.com.au>
+ * @version 0.1.0
+ */
+
+// Load our environment variables, if they exist.
+require('dotenv').config({silent: true});
+
+// Start the Express app.
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-require('dotenv').config();
 var routes = require('./routes/index');
 var questionsRoute = require('./routes/questions');
 
