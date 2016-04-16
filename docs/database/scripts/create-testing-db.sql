@@ -1,5 +1,17 @@
+
 DROP SCHEMA IF EXISTS ephemeral CASCADE;
 CREATE SCHEMA ephemeral;
+
+CREATE TABLE ephemeral.answer_set (
+                name VARCHAR(35) NOT NULL,
+                answers JSON NOT NULL,
+                CONSTRAINT answer_set_pk PRIMARY KEY (name)
+);
+
+
+CREATE UNIQUE INDEX answer_set_uq_name
+ ON ephemeral.answer_set
+ ( name );
 
 CREATE SEQUENCE ephemeral.question_id_seq;
 
@@ -7,22 +19,12 @@ CREATE TABLE ephemeral.question (
                 id INTEGER NOT NULL DEFAULT nextval('ephemeral.question_id_seq'),
                 number INTEGER,
                 text VARCHAR NOT NULL,
-                answer_set_id SMALLINT NOT NULL,
+                answer_set_name VARCHAR(35) NOT NULL,
                 CONSTRAINT question_pk PRIMARY KEY (id)
 );
 
+
 ALTER SEQUENCE ephemeral.question_id_seq OWNED BY ephemeral.question.id;
-
-CREATE SEQUENCE ephemeral.answer_set_id_seq;
-
-CREATE TABLE ephemeral.answer_set (
-                id SMALLINT NOT NULL DEFAULT nextval('ephemeral.answer_set_id_seq'),
-                answers OTHER NOT NULL,
-                CONSTRAINT answer_set_pk PRIMARY KEY (id)
-);
-
-
-ALTER SEQUENCE ephemeral.answer_set_id_seq OWNED BY ephemeral.answer_set.id;
 
 CREATE SEQUENCE ephemeral.provider_id_seq;
 
@@ -39,7 +41,7 @@ ALTER SEQUENCE ephemeral.provider_id_seq OWNED BY ephemeral.provider.id;
 
 CREATE TABLE ephemeral.device (
                 guid VARCHAR(64) NOT NULL,
-                registered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                registered TIMESTAMP DEFAULT LOCALTIMESTAMP NOT NULL,
                 provider_id INTEGER NOT NULL,
                 ip_address VARCHAR(40) NOT NULL,
                 name VARCHAR(50) NOT NULL,
@@ -98,23 +100,16 @@ CREATE TABLE ephemeral.question_response (
 );
 
 
-ALTER TABLE ephemeral.answer_set ADD CONSTRAINT question_answer_fk
-FOREIGN KEY (question_id)
-REFERENCES ephemeral.question (id)
-ON DELETE CASCADE
-ON UPDATE CASCADE
+ALTER TABLE ephemeral.question ADD CONSTRAINT answer_set_question_fk
+FOREIGN KEY (answer_set_name)
+REFERENCES ephemeral.answer_set (name)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
 ALTER TABLE ephemeral.question_response ADD CONSTRAINT question_question_response_fk
 FOREIGN KEY (question_id)
 REFERENCES ephemeral.question (id)
-ON DELETE CASCADE
-ON UPDATE CASCADE
-NOT DEFERRABLE;
-
-ALTER TABLE ephemeral.answer ADD CONSTRAINT answer_set_answer_fk
-FOREIGN KEY (answer_set_id)
-REFERENCES ephemeral.answer_set (id)
 ON DELETE CASCADE
 ON UPDATE CASCADE
 NOT DEFERRABLE;

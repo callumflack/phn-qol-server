@@ -10,6 +10,9 @@
 import path from 'path';
 
 module.exports = function() {
-    describe('SQL Scripts', require(path.join(__dirname, './database/db-creation.js')));
+    describe('Database scripts', () => {
+        require(path.join(__dirname, './database/db-creation.js'))();
+        require(path.join(__dirname, './database/db-test-data-insertion.js'))();
+    });
     describe('Express response `/`', require(path.join(__dirname, './routes/home.js')));
 }
