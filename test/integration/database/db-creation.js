@@ -58,7 +58,16 @@ module.exports = function() {
     
         function createDb(err, dbCreateSql) {
             if (err) return done(err);
+            
+            // We're using a temporary schema, so let's change the SQL script.
             var dbCreateSql = dbCreateSql.replace(/ephemeral/g, schemaName);
+            
+            // While we're at it, let's set the schema once and for all.
+            dbCreateSql = dbCreateSql.replace(
+                /phn\-qol\-survey/,
+                dbConn.database
+            );
+            
             let pgdb = pg()(dbConn);
             pgdb
                 .query(dbCreateSql)
