@@ -16,7 +16,7 @@
  * @version 0.1.0
  */
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({silent: true});
 
 describe("PHN QoL Server testing", function() {
     describe("Platform tests", require('./system/system-tests'));
