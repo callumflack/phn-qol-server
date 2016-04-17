@@ -14,5 +14,8 @@ module.exports = function() {
         require(path.join(__dirname, './database/db-creation.js'))();
         require(path.join(__dirname, './database/db-test-data-insertion.js'))();
     });
-    describe('Express response `/`', require(path.join(__dirname, './routes/home.js')));
+    describe('API Endpoints', () => {
+        require(path.join(__dirname, './routes/home.js'))();
+        require(path.join(__dirname, './routes/questions.js'))();
+    });
 }

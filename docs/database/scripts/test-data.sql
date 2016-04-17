@@ -70,7 +70,7 @@ INSERT INTO question (id, number, text, answer_set_name) VALUES (26, 26, 'How of
 -- Name: question_id_seq; Type: SEQUENCE SET; Schema: ephemeral; Owner: postgres
 --
 
-SELECT pg_catalog.setval('question_id_seq', 27, true);
+SELECT pg_catalog.setval('question_id_seq', 26, true);
 
 
 -- Completed on 2016-04-16 09:03:51
