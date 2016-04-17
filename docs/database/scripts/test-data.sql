@@ -56,12 +56,12 @@ INSERT INTO question (id, number, text, answer_set_name) VALUES (17, 17, 'How sa
 INSERT INTO question (id, number, text, answer_set_name) VALUES (18, 18, 'How satisfied are you with your capacity to work?', 'satisfaction');
 INSERT INTO question (id, number, text, answer_set_name) VALUES (19, 19, 'How satisfied are you with yourself?', 'satisfaction');
 INSERT INTO question (id, number, text, answer_set_name) VALUES (20, 20, 'How satisfied are you with your personal relationships?', 'satisfaction');
-INSERT INTO question (id, number, text, answer_set_name) VALUES (22, 21, 'How satisfied are you with your sex life?', 'satisfaction');
-INSERT INTO question (id, number, text, answer_set_name) VALUES (23, 22, 'How satisfied are you with the support you get from your friends?', 'satisfaction');
-INSERT INTO question (id, number, text, answer_set_name) VALUES (24, 23, 'How satisfied are you with the conditions of your living space?', 'satisfaction');
-INSERT INTO question (id, number, text, answer_set_name) VALUES (25, 24, 'How satisfied are you with your access to health services?', 'satisfaction');
-INSERT INTO question (id, number, text, answer_set_name) VALUES (26, 25, 'How satisfied are you with your transport?', 'satisfaction');
-INSERT INTO question (id, number, text, answer_set_name) VALUES (27, 26, 'How often do you have negative feelings such as blue mood, despair, anxiety, depression?', 'frequency');
+INSERT INTO question (id, number, text, answer_set_name) VALUES (21, 21, 'How satisfied are you with your sex life?', 'satisfaction');
+INSERT INTO question (id, number, text, answer_set_name) VALUES (22, 22, 'How satisfied are you with the support you get from your friends?', 'satisfaction');
+INSERT INTO question (id, number, text, answer_set_name) VALUES (23, 23, 'How satisfied are you with the conditions of your living space?', 'satisfaction');
+INSERT INTO question (id, number, text, answer_set_name) VALUES (24, 24, 'How satisfied are you with your access to health services?', 'satisfaction');
+INSERT INTO question (id, number, text, answer_set_name) VALUES (25, 25, 'How satisfied are you with your transport?', 'satisfaction');
+INSERT INTO question (id, number, text, answer_set_name) VALUES (26, 26, 'How often do you have negative feelings such as blue mood, despair, anxiety, depression?', 'frequency');
 
 
 --
