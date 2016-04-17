@@ -2,7 +2,8 @@
  * Questions route
  * 
  * This Express.js route can be used to request questions for the Quality of
- * Life survey along with their corresponding answer sets.
+ * Life survey along with their corresponding answer sets. Seeing as this is
+ * read-only information, POST, PUT, DELETE, etc. are not implemented.
  * 
  * @author Kashi Samaraweera
  * @version 0.1.0
@@ -14,10 +15,21 @@ var router = express.Router();
 router.get(
     '/',
     (req, res, next) => {
-        var pg = require('../util/db-conn').pg;
-        var db = require('../util/db-conn').db;
+        var dbConn = require('../util/db-conn'),
+            pg = dbConn.pg,
+            db = dbConn.db;
 
-        db.query('SELECT * FROM testing_27.question')
+        db.query(`
+            SELECT
+              question.id,
+              question.number,
+              question.text,
+              question.answer_set_name,
+              answer_set.answers
+            FROM question
+            JOIN answer_set ON answer_set.name = question.answer_set_name
+            ORDER BY question.number ASC;
+        `)
         .then(outputQuestions)
         .catch((err) => { console.log (err); });
 
