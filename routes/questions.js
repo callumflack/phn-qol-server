@@ -1,11 +1,11 @@
 /**
  * Questions route
  * 
- * This Express.js route can be used to request questions for the Quality of
+ * This Express.js router can be used to request questions for the Quality of
  * Life survey along with their corresponding answer sets. Seeing as this is
  * read-only information, POST, PUT, DELETE, etc. are not implemented.
  * 
- * @author Kashi Samaraweera
+ * @author Kashi Samaraweera <kashi@kashis.com.au>
  * @version 0.1.0
  */
 
