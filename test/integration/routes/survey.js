@@ -18,7 +18,7 @@ var responseBody;
 
 module.exports = function() {
     describe('Survey endpoint', function() {
-        it('HTTP1.1/GET `/surey`', (done) => {
+        it('HTTP1.1/GET `/survey`', (done) => {
             this.timeout(5000);
             request(app)
                 .get('/survey')
@@ -32,7 +32,7 @@ module.exports = function() {
                 });
         });
         
-        it('HTTP1.1/POST `/surey`', (done) => {
+        it('HTTP1.1/POST `/survey`', (done) => {
             this.timeout(5000);
             request(app)
                 .post('/survey')

@@ -27,6 +27,7 @@ var routes = require('./routes/index');
 
 var questionsRoute = require('./routes/questions');
 var surveyRoute = require('./routes/survey');
+var deviceRoute = require('./routes/device');
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/questions/', questionsRoute);
 app.use('/survey/', surveyRoute);
+app.use('/device/', deviceRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

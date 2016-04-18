@@ -32,6 +32,16 @@ router
         (req, res, next) => {
             res.json({ a: "Thank you for your submission." });
         }
+    ).delete(
+        '/',
+        /**
+         * Device registration.
+         * 
+         * Accepts device information in order to register it in the database.
+         */
+        (req, res, next) => {
+            res.json({ a: "Thank you for your submission." });
+        }
     );
 
 
