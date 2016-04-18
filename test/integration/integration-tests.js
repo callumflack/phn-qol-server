@@ -17,5 +17,6 @@ module.exports = function() {
     describe('API Endpoints', () => {
         require(path.join(__dirname, './routes/home.js'))();
         require(path.join(__dirname, './routes/questions.js'))();
+        require(path.join(__dirname, './routes/survey.js'))();
     });
 }
