@@ -19,4 +19,7 @@ module.exports = function() {
         require(path.join(__dirname, './routes/questions.js'))();
         require(path.join(__dirname, './routes/survey.js'))();
     });
+    describe('Database teardown', () => {
+        require(path.join(__dirname, './database/db-deletion.js'))();
+    });
 }

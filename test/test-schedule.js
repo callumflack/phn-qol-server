@@ -15,8 +15,13 @@
  * @author Kashi Samaraweera <kashi@kashis.com.au>
  * @version 0.1.0
  */
+
 import dotenv from 'dotenv';
-dotenv.config({silent: true});
+process.env.NODE_ENV = 'test';
+
+dotenv.config({
+    path: process.env.DOTENV_PATH
+});
 
 describe("PHN QoL Server testing", function() {
     describe("Platform tests", require('./system/system-tests'));

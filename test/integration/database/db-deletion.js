@@ -1,8 +1,8 @@
 /**
- * Database test data population tests
+ * Database deletion tests
  * 
- * Populates the database with suitable test data so that further testing can
- * take place. This also tests the validity of the test-data SQL script.
+ * Designed to drop any schemas that have been made during the testing process
+ * once the test suite has completed its population. 
  * 
  * @author Kashi Samaraweera <kashi@kashis.com.au>
  * @version 0.1.0
@@ -12,8 +12,8 @@ import pg from 'pg-promise';
 import chai from 'chai';
 import fs from 'fs';
 
-const TEST_DATA_SQL_FILE = 
-    './docs/database/scripts/test-data.sql';
+const DB_DELETION_SQL_FILE = 
+    './docs/database/scripts/delete-testing-db.sql';
 
 const dbConn = {
     host: process.env.DB_HOSTNAME,
@@ -32,30 +32,38 @@ let assert = chai.assert;
  * Database creation functions
  */
 module.exports = function() { 
-       
-    it('Database test data population', function(done) {
+
+    it('Database deletion executes', function(done) {
         // We're going to create a temporary schema and inject some data
         // into it.
         this.timeout(3e5);
         var circleBuildNum = process.env.CIRCLE_BUILD_NUM || false,
-            schemaName = process.env.DB_SCHEMA,
-            dbPopulationFile;
+            exportedDbTestSchemaName = process.env.DB_SCHEMA,
+            schemaName,
+            dbCreateFile;
+            
+        schemaName = exportedDbTestSchemaName || ('testing_' + circleBuildNum);
 
         fs.readFile(
-            path.join(projectDir, TEST_DATA_SQL_FILE),
+            path.join(projectDir, DB_DELETION_SQL_FILE),
             'utf-8',
-            populateDb
+            deleteDb
         );
     
-        function populateDb(err, populateDbSql) {
+        function deleteDb(err, dbDeleteSql) {
             if (err) return done(err);
-            var populateDbSql = populateDbSql.replace(/ephemeral/g, schemaName);
+            
+            // We're using a temporary schema, so let's change the SQL script.
+            var dbDeleteSql = dbDeleteSql.replace(/ephemeral/g, schemaName);
             
             let pgdb = pg()(dbConn);
+            
             pgdb
-                .query(populateDbSql)
+                .query(dbDeleteSql)
                 .then(_ => done())
                 .catch(done);
         }
-    });    
+    });
+        
+    
 }

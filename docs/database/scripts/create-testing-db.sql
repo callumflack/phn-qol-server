@@ -1,8 +1,7 @@
-
 DROP SCHEMA IF EXISTS ephemeral CASCADE;
 CREATE SCHEMA ephemeral;
 
-ALTER DATABASE phn-qol-survey SET search_path = ephemeral;
+SET search_path = ephemeral;
 
 CREATE TABLE ephemeral.answer_set (
                 name VARCHAR(35) NOT NULL,

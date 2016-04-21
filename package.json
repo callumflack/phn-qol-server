@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node --harmony ./bin/www",
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "node node_modules/mocha/bin/mocha",
+    "test-local": "node -r ./docs/dev-setup/export-local node_modules/mocha/bin/mocha"
   },
   "engines": {
     "node": "5.9.1"

@@ -14,7 +14,16 @@
  */
 
 // Load our environment variables, if they exist.
-require('dotenv').config({silent: true});
+// if (process.env.NODE_ENV !== 'test') {
+//   console.log("NODE_ENV is NOT test. ABORTING.");
+//   exit(1);
+//   require('dotenv').config(
+//     {
+//       silent: true,
+//       path: process.env.DOTENV_FILE
+//     }
+//   );
+// }
 
 // Start the Express app.
 var express = require('express');

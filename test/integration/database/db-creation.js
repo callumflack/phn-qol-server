@@ -48,7 +48,7 @@ module.exports = function() {
             dbCreateFile;
             
         schemaName += circleBuildNum || randomSchemaName;
-        process.env["DB_TESTING_SCHEMA"] = schemaName;
+        process.env["DB_SCHEMA"] = schemaName;
 
         fs.readFile(
             path.join(projectDir, DB_CREATION_SQL_FILE),
@@ -61,13 +61,7 @@ module.exports = function() {
             
             // We're using a temporary schema, so let's change the SQL script.
             var dbCreateSql = dbCreateSql.replace(/ephemeral/g, schemaName);
-            
-            // While we're at it, let's set the schema once and for all.
-            dbCreateSql = dbCreateSql.replace(
-                /phn\-qol\-survey/,
-                dbConn.database
-            );
-            
+
             let pgdb = pg()(dbConn);
             pgdb
                 .query(dbCreateSql)
