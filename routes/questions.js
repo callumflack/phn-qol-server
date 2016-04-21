@@ -21,15 +21,16 @@ router.get(
 
         db.query(`
             SELECT
-              question.id,
-              question.number,
-              question.text,
-              question.answer_set_name,
-              answer_set.answers
-            FROM question
-            JOIN answer_set ON answer_set.name = question.answer_set_name
-            ORDER BY question.number ASC;
-        `)
+              schema_name.question.id,
+              schema_name.question.number,
+              schema_name.question.text,
+              schema_name.question.answer_set_name,
+              schema_name.answer_set.answers
+            FROM schema_name.question
+            JOIN schema_name.answer_set
+              ON schema_name.answer_set.name = schema_name.question.answer_set_name
+            ORDER BY schema_name.question.number ASC;
+        `.replace(/schema_name/g, dbConn.schema))
         .then(outputQuestions)
         .catch((err) => { console.log (err); });
 

@@ -17,6 +17,7 @@ var pg = require('pg-promise');
 var dbConn = {
     host: process.env.DB_HOSTNAME,
     database: process.env.DB_DATABASE,
+    schema: process.env.DB_SCHEMA,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT || 5432,
@@ -28,5 +29,6 @@ var pgdb = pgInitalised(dbConn);
 
 module.exports = {
     pg: pgInitalised,
-    db: pgdb
+    db: pgdb,
+    schema: dbConn.schema
 }; 
