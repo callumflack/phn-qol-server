@@ -38,6 +38,8 @@ process.env["DB_SCHEMA"] = schemaName;
 
 describe("PHN QoL Server testing", function() {
     describe("Platform tests", require('./system/system-tests'));
+    describe("Test setup", require('./setup/test-setup'));
     describe("Unit tests",  require('./unit/unit-tests'));
     describe("Integration tests", require('./integration/integration-tests'));
+    describe("Test teardown", require('./setup/test-teardown'));
 });

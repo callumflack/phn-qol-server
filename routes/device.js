@@ -28,9 +28,16 @@ router
          * Device registration.
          * 
          * Accepts device information in order to register it in the database.
+         * The values supplied are validated, and if valid then the device is
+         * issued a JWT token which will authorise submissions in future.
          */
         (req, res, next) => {
-            res.json({ a: "Thank you for your submission." });
+            var regData = {
+                providerCode: req.body.providerCode,
+                ipAddress: req.ip,
+                userAgent: req.headers['user-agent']
+            };
+            res.json({ok:"ok"});
         }
     ).delete(
         '/',

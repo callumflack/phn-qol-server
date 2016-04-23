@@ -10,17 +10,10 @@
 import path from 'path';
 
 module.exports = function() {
-    describe('Database scripts', () => {
-        require(path.join(__dirname, './database/db-creation.js'))();
-        require(path.join(__dirname, './database/db-test-data-insertion.js'))();
-    });
     describe('API Endpoints', () => {
         require(path.join(__dirname, './routes/home.js'))();
         require(path.join(__dirname, './routes/questions.js'))();
         require(path.join(__dirname, './routes/device.js'))();
         require(path.join(__dirname, './routes/survey.js'))();
-    });
-    describe('Database teardown', () => {
-        require(path.join(__dirname, './database/db-deletion.js'))();
     });
 }
