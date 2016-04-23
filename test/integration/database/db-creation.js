@@ -39,16 +39,7 @@ module.exports = function() {
         // We're going to create a temporary schema and inject some data
         // into it.
         this.timeout(3e5);
-        var circleBuildNum = process.env.CIRCLE_BUILD_NUM || false,
-            schemaName = 'testing_',
-            randomSchemaName = Math
-                .random()
-                .toString(36)
-                .replace(/[^a-zA-Z]/g, ''),
-            dbCreateFile;
-
-        schemaName += circleBuildNum || randomSchemaName;
-        process.env["DB_SCHEMA"] = schemaName;
+        var dbCreateFile;
 
         fs.readFile(
             path.join(projectDir, DB_CREATION_SQL_FILE),
@@ -60,7 +51,10 @@ module.exports = function() {
             if (err) return done(err);
             
             // We're using a temporary schema, so let's change the SQL script.
-            var dbCreateSql = dbCreateSql.replace(/ephemeral/g, schemaName);
+            var dbCreateSql = dbCreateSql.replace(
+                /ephemeral/g,
+                process.env.DB_SCHEMA
+            );
 
             let pgdb = pg()(dbConn);
             pgdb

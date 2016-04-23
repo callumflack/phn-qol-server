@@ -19,12 +19,25 @@
 import dotenv from 'dotenv';
 process.env.NODE_ENV = 'test';
 
+// Find our environment variables file
+const defaultEnvPath = './.env.test-local'
 dotenv.config({
-    path: process.env.DOTENV_PATH
+    path: process.env.DOTENV_PATH || defaultEnvPath
 });
+
+// Export the DB_SCHEMA environment variable
+var circleBuildNum = process.env.CIRCLE_BUILD_NUM || false,
+    schemaName = 'testing_',
+    randomSchemaName = Math
+        .random()
+        .toString(36)
+        .replace(/[^a-zA-Z]/g, '');
+
+schemaName += circleBuildNum || randomSchemaName;
+process.env["DB_SCHEMA"] = schemaName;
 
 describe("PHN QoL Server testing", function() {
     describe("Platform tests", require('./system/system-tests'));
-    describe("Unit tests", function(done) {});
+    describe("Unit tests",  require('./unit/unit-tests'));
     describe("Integration tests", require('./integration/integration-tests'));
 });
