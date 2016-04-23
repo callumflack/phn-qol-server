@@ -21,6 +21,8 @@ module.exports = function() {
             .getFromCode(TEST_PROVIDER_CODE)
             .then(checkProvider);
         
+        assert.instanceOf(providerInfoPromise, Promise);
+        
         function checkProvider(providerObj) {
             assert.isString(providerObj.code);
             assert.equal(providerObj.code, TEST_PROVIDER_CODE);
@@ -37,6 +39,8 @@ module.exports = function() {
         var providerInfoPromise = provider
             .getFromCode(TEST_PROVIDER_CODE + 'asdfjldf')
             .then(checkProvider);
+        
+        assert.instanceOf(providerInfoPromise, Promise);
         
         function checkProvider(providerObj) {
             assert.isUndefined(providerObj);           
