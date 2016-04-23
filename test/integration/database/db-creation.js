@@ -46,7 +46,7 @@ module.exports = function() {
                 .toString(36)
                 .replace(/[^a-zA-Z]/g, ''),
             dbCreateFile;
-            
+
         schemaName += circleBuildNum || randomSchemaName;
         process.env["DB_SCHEMA"] = schemaName;
 

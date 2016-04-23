@@ -45,11 +45,10 @@ CREATE TABLE ephemeral.device (
                 registered TIMESTAMP DEFAULT LOCALTIMESTAMP NOT NULL,
                 provider_id INTEGER NOT NULL,
                 ip_address VARCHAR(40) NOT NULL,
-                name VARCHAR(50) NOT NULL,
+                user_agent VARCHAR(255) NOT NULL,
                 status VARCHAR(20) NOT NULL,
                 CONSTRAINT device_pk PRIMARY KEY (guid)
 );
-
 
 CREATE SEQUENCE ephemeral.age_bracket_id_1;
 

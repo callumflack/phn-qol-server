@@ -90,8 +90,8 @@ INSERT INTO ephemeral.provider (id, code, region, location) VALUES (5, 'ENT202',
 -- Data for Name: device; Type: TABLE DATA; Schema: testing_kzljucyeejtgvi; Owner: phnqldsurvey
 --
 
-INSERT INTO ephemeral.device (guid, registered, provider_id, ip_address, name, status) VALUES ('custom-entered-manually-1', '2016-04-21 20:13:30.480497', 1, '10.1.1.1', 'iPad', 'ACTIVE');
-INSERT INTO ephemeral.device (guid, registered, provider_id, ip_address, name, status) VALUES ('custom-entered-manually-2', '2016-04-21 20:13:54.801006', 4, '192.168.0.1', 'iPad 3', 'ACTIVE');
+INSERT INTO ephemeral.device (guid, registered, provider_id, ip_address, user_agent, status) VALUES ('custom-entered-manually-1', '2016-04-21 20:13:30.480497', 1, '10.1.1.1', 'iPad', 'ACTIVE');
+INSERT INTO ephemeral.device (guid, registered, provider_id, ip_address, user_agent, status) VALUES ('custom-entered-manually-2', '2016-04-21 20:13:54.801006', 4, '192.168.0.1', 'iPad 3', 'ACTIVE');
 
 
 -- Completed on 2016-04-16 09:03:51
