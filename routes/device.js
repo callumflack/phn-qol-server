@@ -40,11 +40,13 @@ router
             };
             Device
                 .validate(regData)
-                .then(() => res.json({result:"registering"}))
                 .catch(err => {
+                    console.log(err);
                     res.status(400);
                     res.json({errors: err });
-                });
+                })
+                .then((device) => Device.register(device))
+                .then(device => res.json(device));
         }
     ).delete(
         '/',

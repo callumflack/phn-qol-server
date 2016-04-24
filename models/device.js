@@ -12,12 +12,15 @@ var validator = require('validator');
 var Provider = require('./provider');
 
 /**
- * @typedef {object} DeviceInfo
+ * @typedef {object} Device
  * @property {string} providerCode  The provider code which will be matched to
  *                                  an entry in the database.
+ * @property {Provider} provider    A Provider object (see provider.js) to which
+ *                                  this device belongs.
  * @property {string} ipAddress An IPv4 or IPv6 address for the client.
  * @property {string} userAgent The user-agent string for the client.
  */
+
 /**
  * @typedef {object} ValidationError
  * @property {string} input The input name being validated.
@@ -27,8 +30,9 @@ var DeviceModel = {
     /**
      * Provides validation of input from the client to ensure the device being
      * registered adheres to the expectation.
-     * @param {DeviceInfo} deviceInfo   Details provided by the client during a
-     *                                  registration request.
+     * @param {Device} deviceInfo   Details provided by the client during a
+     *                              registration request. This will typically
+     *                              exclude the `provider` property.
      * @return  {Promise.ValidationError[]} Rejects the with an array of errors
      *                                      or resolved to a sanitised version
      *                                      of the input data.
@@ -66,8 +70,10 @@ var DeviceModel = {
                     });
 
                 if (errors.length === 0) {
+                    // Send a fully-fledged `Device` object.
                     resolve({
-                        providerCode: provider,
+                        providerCode: provider.code,
+                        provider: provider,
                         ipAddress: ipAddress,
                         userAgent: userAgent
                     });
@@ -78,7 +84,47 @@ var DeviceModel = {
             });
         }
     },
-    register: function(deviceInfo) {
+    /**
+     * Registers a device in the database, issuing a UUID with which to identify
+     * the device.
+     * @param {Device} device   A Device object will all properties defined.
+     */
+    register: function(device) {
+        var uuid = require('node-uuid');
+        var dbConn = require('../util/db-conn'),
+            db = dbConn.db,
+            deviceUuid = uuid.v4();
+
+        device.uuid = deviceUuid;
+
+        return db.query(
+            `
+                INSERT INTO schema_name.device
+                    (guid, registered, provider_id, ip_address, user_agent, status)
+                VALUES
+                    ($1, NOW(), $2, $3, $4, 'ACTIVE')
+            `.replace(/schema_name/g, dbConn.schema),
+            [ deviceUuid, device.provider.id, device.ipAddress, device.userAgent ]
+        )
+        .then(confirmRegistration)
+        .catch(err => console.log(err));
+        
+        function confirmRegistration(result) {
+            return new Promise(function (resolve, reject) {
+                console.log(result);
+                resolve(device);
+            });
+        }
+    },
+    /**
+     * Generates a JWT token for the device, which may be used to authenticate
+     * survey submissions.
+     * @param {Device} device   The device information, along with the UUID
+     *                          stored in the database.
+     * @return {string} Returns a JSON Web Token which may be stored by the
+     *                  client for survey authentication.
+     */
+    issueToken: function(device) {
         
     }
 };
