@@ -11,6 +11,7 @@
 
 var express = require('express');
 var router = express.Router();
+var Device = require('../models/device');
 
 router
     .get(
@@ -37,7 +38,13 @@ router
                 ipAddress: req.ip,
                 userAgent: req.headers['user-agent']
             };
-            res.json({ok:"ok"});
+            Device
+                .validate(regData)
+                .then(() => res.json({result:"registering"}))
+                .catch(err => {
+                    res.status(400);
+                    res.json({errors: err });
+                });
         }
     ).delete(
         '/',
