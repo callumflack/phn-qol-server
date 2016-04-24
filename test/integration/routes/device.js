@@ -76,8 +76,25 @@ module.exports = function() {
                 .end(function(err, res) {
                     responseBody = res.body;
                     assert.isObject(responseBody);
+                    assert.isString(responseBody.token);
                     done();
                 });
+        });
+        
+        it('Strong token verification', (done) => {
+            var jwt = require('jsonwebtoken'),
+                jwtKey = process.env.JWT_KEY;
+
+            assert.doesNotThrow(verifyJwt, Error);
+            assert.throws(invalidJwtKey, /invalid\ssignature/i);
+            done();
+            
+            function verifyJwt() {
+                jwt.verify(responseBody.token, jwtKey);
+            }
+            function invalidJwtKey() {
+                jwt.verify(responseBody.token, jwtKey + 'blah');
+            }
         });
         
         it('Validation: invalid providerCode raises not_found', (done) => {
