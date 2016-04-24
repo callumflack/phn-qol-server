@@ -21,7 +21,7 @@ router
          * @unimplmented
          */
         (req, res, next) => {
-            res.json({ a: "Please authenticate." });
+            res.json({ error: "Operation not supported" });
         }
     ).post(
         '/',
@@ -40,12 +40,14 @@ router
             };
             Device
                 .validate(regData)
+                .then(Device.register)
+                .then(Device.issueToken)
+                .then(token => res.json({ token: token }))
                 .catch(err => {
                     res.status(400);
                     res.json({errors: err });
-                })
-                .then(Device.register)
-                .then(device => res.json(device));
+                    return;
+                });
         }
     ).delete(
         '/',
@@ -55,7 +57,7 @@ router
          * Accepts device information in order to register it in the database.
          */
         (req, res, next) => {
-            res.json({ a: "Thank you for your submission." });
+            res.json({ error: "Operation not supported" });
         }
     );
 

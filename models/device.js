@@ -120,10 +120,28 @@ var DeviceModel = {
      * survey submissions.
      * @param {Device} device   The device information, along with the UUID
      *                          stored in the database.
-     * @return {string} Returns a JSON Web Token which may be stored by the
-     *                  client for survey authentication.
+     * @return {Promise.string} Returns a JSON Web Token which may be stored by
+     *                          the client for survey authentication.
      */
     issueToken: function(device) {
+        var jwt = require('jsonwebtoken'),
+            tokenData = {
+                iat: Date.now(),
+                iss: process.env.SERVER_URL,
+                aud: process.env.CLIENT_URL,
+                exp: Date.now() + 1000*60*60*24*356*2,
+                jti: device.uuid,
+                providerId: device.providerId
+            };
+        
+        return new Promise(function(resolve, reject) {
+            jwt.sign(
+                tokenData,
+                process.env.JWT_KEY,
+                undefined,
+                function(token) { resolve(token); return; }
+            );
+        });
         
     }
 };
