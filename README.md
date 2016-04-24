@@ -32,6 +32,14 @@ As we're using [CircleCI](https://circleci.com/dashboard) for continuous deliver
 
 As an API server, most of the testing that is conducted can be automated and for that we use the [Mocha](https://mochajs.org/) testing framework, along with [Chai](http://chaijs.com/) assertion library and [SuperTest](https://github.com/visionmedia/supertest). There are broadly three categories of testing that takes place: unit testing, integration testing and system testing.
 
+### Running tests
+Please see the [Environment Variables documentation](./docs/environment-variables.md) for the environment variable requirements for test execution.
+
+Once the environment has all the requisite environment variables, the following commands may be used to test the server:
+
+ * `npm test` - Uses the existing environment variables.
+ * `npm run test-local` - loads any environment variables configured in a `./.env.test-local` file before continuing to run the same tests.
+
 ### Unit Testing
 Unit tests are arranged into their components within the `unit/` directory. By definition, these tests should operate on individual components, treating them as a black box to observe their behaviour. For a given input, there will be an expeted output and most discrete tests will simply compare the actual output to an expected output for a corresponding input.
 
