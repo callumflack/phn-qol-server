@@ -111,7 +111,6 @@ var DeviceModel = {
         
         function confirmRegistration(result) {
             return new Promise(function (resolve, reject) {
-                console.log(result);
                 resolve(device);
             });
         }

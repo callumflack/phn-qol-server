@@ -41,11 +41,10 @@ router
             Device
                 .validate(regData)
                 .catch(err => {
-                    console.log(err);
                     res.status(400);
                     res.json({errors: err });
                 })
-                .then((device) => Device.register(device))
+                .then(Device.register)
                 .then(device => res.json(device));
         }
     ).delete(
