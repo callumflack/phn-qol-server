@@ -150,6 +150,7 @@ module.exports = function() {
     });
     
     it('Store a submission', function(done) {
+        this.timeout(5000);
         var survey = require(path.join(projectDir, './models/survey'));
         var validation,
             questions = QUESTION_IDS.slice(0),
@@ -185,6 +186,9 @@ module.exports = function() {
             .then(function(result) {
                 done();
             })
-            .catch(err => console.error(err));        
+            .catch(function(err) {
+                console.error(err);
+                done(err);
+            });
     });
 }
