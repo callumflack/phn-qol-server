@@ -14,8 +14,11 @@ module.exports = function() {
         require(path.join(__dirname, './models/provider.js'))();
     
     });
+    describe('Device model', () => {
+        require(path.join(__dirname, './models/device.js'))();
+    
+    });
     describe('Survey model', () => {
         require(path.join(__dirname, './models/survey.js'))();
-    
     });
 }

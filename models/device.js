@@ -21,6 +21,10 @@ var Provider = require('./provider');
  * @property {string} userAgent The user-agent string for the client.
  */
 
+const JWT_KEY = process.env.JWT_KEY;
+const SERVER_URL = process.env.SERVER_URL;
+const CLIENT_URL = process.env.CLIENT_URL;
+
 /**
  * @typedef {object} ValidationError
  * @property {string} input The input name being validated.
@@ -126,23 +130,52 @@ var DeviceModel = {
     issueToken: function(device) {
         var jwt = require('jsonwebtoken'),
             tokenData = {
-                iat: Date.now(),
-                iss: process.env.SERVER_URL,
-                aud: process.env.CLIENT_URL,
-                exp: Date.now() + 1000*60*60*24*356*2,
-                jti: device.uuid,
-                providerId: device.providerId
-            };
+                provider: {
+                    id: device.provider.id
+                }
+            },
+            tokenOptions = {
+                issuer: SERVER_URL,
+                audience: CLIENT_URL,
+                expiresIn: 1000*60*60*24*356*2, // 2 years
+                notBefore: 0,
+                jwtid: device.uuid
+            }
         
         return new Promise(function(resolve, reject) {
             jwt.sign(
                 tokenData,
-                process.env.JWT_KEY,
-                undefined,
+                JWT_KEY,
+                tokenOptions,
                 function(token) { resolve(token); return; }
             );
         });
-        
+    },
+    /**
+     * Takes a JWT token (encoded), decodes and verifies it for authenticity.
+     * @param {string} tokenString  The encoded JWT token.
+     * @return {Promise.boolean}    Returns a boolean TRUE or FALSE based on the
+     *                              verification against the JWT key.
+     */
+    verifyToken: function(tokenString) {
+        return new Promise(function (resolve, reject) {
+            var jwt = require('jsonwebtoken');
+            jwt.verify(
+                tokenString,
+                JWT_KEY,
+                {
+                    issuer: SERVER_URL,
+                    audience: CLIENT_URL
+                },
+                returnVerification
+            );
+
+            function returnVerification(err, result) {
+                if (err) { reject(err); return; }
+                result.uuid = result.jti;
+                resolve(result); return;
+            }
+        });
     }
 };
 
