@@ -116,4 +116,36 @@ module.exports = function() {
         assert.equal(missingResponses.length, 0);
         done();
     });
+    
+    it('Participant validation passess valid participant', function(done) {
+        var survey = require(path.join(projectDir, './models/survey'));
+        var validation,
+            participant = {
+                gender: "male",
+                ageGroup: 3,
+                education: "University (Tertiary)",
+                indigenous: true,
+                region: "Croydon",
+                sessionNumber: 1
+            }
+        validation = survey.validateParticipant(participant);
+        assert.equal(0, validation.length);
+        done();
+    });
+    
+    it('Participant validation flags invalid participant fields', function(done) {
+        var survey = require(path.join(projectDir, './models/survey'));
+        var validation,
+            participant = {
+                gender: "female",
+                education: "University (Tertiary)",
+                indigenous: true,
+                sessionNumber: 1
+            }
+        validation = survey.validateParticipant(participant);
+        assert.equal(2, validation.length);
+        assert.equal("missing", validation[0].code);
+        assert.equal("missing", validation[1].code);
+        done();
+    });
 }

@@ -34,8 +34,8 @@
  *                                  indigenous Australian.
  * @property {string} healthcareRegion  The PHN reigon under which the
  *                                      participant is afforded healthcare.
- * @property {Number} sessionNo The number of submissions this participant has
- *                              taken part in.
+ * @property {Number} sessionNumber The number of submissions this participant
+ *                                  had taken part in.
  */
 /**
  * @typedef QValidationIssue
@@ -44,10 +44,18 @@
  * @property {string} code  The error code identifying the validation issue.
  * @property {string} message   A brief description of the issue.
  */
+/**
+ * @typedef PValidationIssue
+ * @property {string} input The specific question being validated (by name).
+ * @property {string} code  The error code identifying the validation issue.
+ * @property {string} message   A brief description of the issue.
+ */
 
 /** A list of question IDs to verify coverage. */
 const QUESTION_IDS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,
                         23,24,25,26];
+const PARTICIPANT_FIELDS = ["gender", "ageGroup", "education", "indigenous",
+                            "region", "sessionNumber"];
 
 var SurveyModel = {
     /**
@@ -114,8 +122,48 @@ var SurveyModel = {
         
         return validation;
     },
+    /**
+     * Validates the participant's "About you" responses, producing an array of
+     * validation issues for each invalid property.
+     * @param {Participant} participant The participant's "About you" responses.
+     * @return {PValidationIssue[]} Returns an array of validation issues.
+     */
     validateParticipant: function(participant) {
+        var validation = [],
+            missingFields = [],
+            fields = PARTICIPANT_FIELDS.slice(0);
         
+        // Basic checks ("missing")
+        fields.forEach(function(fieldName) {
+            if ( ( ! participant[fieldName]) || participant[fieldName] === "") {
+                validation.push({
+                    input: fieldName,
+                    code: "missing",
+                    message: "Please supply an answer."
+                });
+                missingFields.push(fieldName);
+            }
+        });
+        // Advanced checks
+        // Gender
+        if (missingFields.indexOf("gender") === -1)
+            if ( ! /(fe)?male/i.test(participant.gender))
+                validation.pushs({
+                    input: "gender",
+                    code: "invalid_gender",
+                    message: "Please select either male or female."
+                });
+
+        // Age group
+        if (missingFields.indexOf("ageGroup") === -1)
+            if (participant.ageGroup < 1 || participant.ageGroup > 7)
+                validation.push({
+                    input: "ageGroup",
+                    code: "invalid_age_group",
+                    message: "Please choose an age group between 1 and 7."
+                });
+
+        return validation;
     }
 };
 
