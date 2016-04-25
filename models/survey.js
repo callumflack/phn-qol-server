@@ -32,8 +32,8 @@
  *                                  age_bracket table in the database).
  * @property {boolean} indigenous   Indicates whether the participant is an
  *                                  indigenous Australian.
- * @property {string} healthcareRegion  The PHN reigon under which the
- *                                      participant is afforded healthcare.
+ * @property {string} region    The PHN reigon under which the participant is
+ *                              provided healthcare.
  * @property {Number} sessionNumber The number of submissions this participant
  *                                  had taken part in.
  */
@@ -75,6 +75,8 @@ var SurveyModel = {
         validation.participant = validateParticipant(submission.participant);
 
         submission.validation = validation;
+        submission.isValid = validation.survey.length === 0
+                                && validation.participant.length === 0;
 
         return submission;
     },
@@ -164,6 +166,71 @@ var SurveyModel = {
                 });
 
         return validation;
+    },
+    /**
+     * Takes a validated submission and stores it in the database.
+     * 
+     * @param {Submission} submission   A validated submission object.
+     * @return {Promise.boolean}    Returns a boolean TRUE if the submission was
+     *                              stored successfully, an error if not.
+     */
+    storeSubmission: function(submission) {
+        var dbConn = require('../util/db-conn'),
+            db = dbConn.db,
+            participant = submission.participant,
+            device = submission.device,
+            survey = submission.survey;
+
+        // Make this a transaction.
+        return db.tx(function(t) {
+            // Add participant
+            return t.one(
+                `
+                    INSERT INTO schema_name.participant
+                    (gender, education, age_bracket_id, indigenous, healthcare_region,
+                    session_number)
+                    VALUES ($1, $2, $3, $4, $5, $6)
+                    RETURNING id
+                `.replace(/schema_name/g, dbConn.schema),
+                [ 
+                    participant.gender, participant.education, participant.ageGroup,
+                    participant.indigenous, participant.region,
+                    participant.sessionNumber
+                ]
+            ).then(function(pRow) {
+                // Insert submission
+                return t.one(
+                    `
+                        INSERT INTO schema_name.submission
+                        (time, participant_id, device_guid, provider_id)
+                        VALUES (NOW(), $1, $2, $3)
+                        RETURNING id
+                    `.replace(/schema_name/g, dbConn.schema),
+                    [
+                        pRow.id, device.uuid, device.provider.id
+                    ]
+                );
+            }).then(function(submissionRow) {
+                // Arrange each of the answers into an insertion.
+                var submissionRows = [];
+                submission.survey.forEach(function(questionResponse) {
+                    submissionRows.push(
+                        t.none(
+                            `
+                                INSERT INTO schema_name.question_response
+                                (submission_id, question_id, response)
+                                VALUES ($1, $2, $3)
+                            `.replace(/schema_name/g, dbConn.schema),
+                            [
+                                submissionRow.id, questionResponse.questionId,
+                                questionResponse.response
+                            ]
+                        )
+                    );
+                });
+                return t.batch(submissionRows);
+            });
+        });
     }
 };
 

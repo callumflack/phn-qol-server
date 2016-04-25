@@ -93,9 +93,25 @@ INSERT INTO ephemeral.provider (id, code, region, location) VALUES (5, 'ENT202',
 INSERT INTO ephemeral.device (guid, registered, provider_id, ip_address, user_agent, status) VALUES ('custom-entered-manually-1', '2016-04-21 20:13:30.480497', 1, '10.1.1.1', 'iPad', 'ACTIVE');
 INSERT INTO ephemeral.device (guid, registered, provider_id, ip_address, user_agent, status) VALUES ('custom-entered-manually-2', '2016-04-21 20:13:54.801006', 4, '192.168.0.1', 'iPad 3', 'ACTIVE');
 
+--
+-- TOC entry 2240 (class 0 OID 43382)
+-- Dependencies: 190
+-- Data for Name: age_bracket; Type: TABLE DATA; Schema: ephemeral; Owner: postgres
+--
 
--- Completed on 2016-04-16 09:03:51
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (1, NULL, 14);
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (2, 15, 24);
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (3, 25, 34);
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (4, 35, 44);
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (5, 45, 54);
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (6, 55, 64);
+INSERT INTO ephemeral.age_bracket (id, min, max) VALUES (7, 65, NULL);
 
+
+--
+-- TOC entry 2247 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: age_bracket_id_1; Type: SEQUENCE SET; Schema: ephemeral; Owner: postgres
 --
 -- PostgreSQL database dump complete
 --
