@@ -22,7 +22,8 @@ process.env.NODE_ENV = 'test';
 // Find our environment variables file
 const defaultEnvPath = './.env.test-local'
 dotenv.config({
-    path: process.env.DOTENV_PATH || defaultEnvPath
+    path: process.env.DOTENV_PATH || defaultEnvPath,
+    silent: true
 });
 
 // Export the DB_SCHEMA environment variable
