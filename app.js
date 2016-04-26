@@ -42,7 +42,7 @@ var cors = require('cors')
 var app = express();
 
 // CORS setup
-var whitelist = ['http://localhost:8080', 'https://phn-qol-survey-staging.herokuapp.com'];
+var whitelist = ['http://localhost:8080', 'http://phnqolsurvey.surge.sh', 'https://phnqolsurvey.surge.sh'];
 var corsOptions = {
   origin: function(origin, callback){
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
