@@ -39,7 +39,18 @@ var surveyRoute = require('./routes/survey');
 var deviceRoute = require('./routes/device');
 var cors = require('cors')
 
-var app = express(cors);
+var app = express();
+
+// CORS setup
+var whitelist = ['http://localhost:8080', 'https://phn-qol-survey-staging.herokuapp.com'];
+var corsOptions = {
+  origin: function(origin, callback){
+    var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+    callback(null, originIsWhitelisted);
+  }
+};
+
+app.use(cors(corsOptions));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

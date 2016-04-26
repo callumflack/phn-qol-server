@@ -34,15 +34,33 @@ router
          */
         (req, res, next) => {
             var regData = {
-                providerCode: req.body.providerCode,
-                ipAddress: req.ip,
-                userAgent: req.headers['user-agent']
-            };
+                    providerCode: req.body.providerCode,
+                    ipAddress: req.ip,
+                    userAgent: req.headers['user-agent']
+                },
+                regionName,
+                providerCode;
+
             Device
                 .validate(regData)
                 .then(Device.register)
+                .then(function(device) {
+                    return new Promise(function(resolve, reject) {
+                        regionName = device.provider.region;
+                        providerCode = device.provider.code;
+                        resolve(device);
+                    });
+                })
                 .then(Device.issueToken)
-                .then(token => res.json({ token: token }))
+                .then(function(token) {
+                    res.json({ 
+                        token: token,
+                        provider: {
+                            region: regionName,
+                            code: providerCode
+                        }
+                    })
+                })
                 .catch(err => {
                     res.status(400);
                     res.json({errors: err });
