@@ -37,8 +37,9 @@ var routes = require('./routes/index');
 var questionsRoute = require('./routes/questions');
 var surveyRoute = require('./routes/survey');
 var deviceRoute = require('./routes/device');
+var cors = require('cors')
 
-var app = express();
+var app = express(cors);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
