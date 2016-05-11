@@ -11,6 +11,8 @@
 
 var express = require('express');
 var router = express.Router();
+var deviceModel = require('../models/device');
+var surveyModel = require('../models/survey');
 
 router
     .get(
@@ -30,7 +32,43 @@ router
          * responses.
          */
         (req, res, next) => {
-            res.json({ a: "Thank you for your submission." });
+            var submission = {
+                survey: req.body.survey,
+                participant: req.body.participant
+            },
+            validation,
+            auth = req.headers["device-token"],
+            deviceInfo,
+            errors = [];
+            
+            deviceModel
+                .verifyToken(auth)
+                .then((deviceTokenData) => deviceInfo = deviceTokenData)
+                .catch((err) => errors.push(err));
+
+            if ( ! submission.survey)
+                errors.push(
+                    {
+                        code: "missing_survey", 
+                        description: "Fatal: missing survey object in request."
+                    }
+                );
+            if ( ! submission.participant)
+                errors.push(
+                    {
+                        code: "missing_participant", 
+                        description: "Fatal: missing participant object in request."
+                    }
+                );
+            if (errors.length)
+                return res.json({ errors: errors });
+            
+            validation = surveyModel.validate(submission);
+            if (validation.length) {
+                return res.json({ errors: validation });
+            }
+
+            res.json(submission);
         }
     );
 

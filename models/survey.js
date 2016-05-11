@@ -71,8 +71,8 @@ var SurveyModel = {
     validate: function(submission) {
         var validation = {};
 
-        validation.survey = validateSurvey(submission.survey);
-        validation.participant = validateParticipant(submission.participant);
+        validation.survey = this.validateSurvey(submission.survey);
+        validation.participant = this.validateParticipant(submission.participant);
 
         submission.validation = validation;
         submission.isValid = validation.survey.length === 0
