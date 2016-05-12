@@ -114,9 +114,9 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 NOT DEFERRABLE;
 
-ALTER TABLE ephemeral.submission ADD CONSTRAINT provider_submission_fk
+ALTER TABLE ephemeral.submission ADD CONSTRAINT participant_submission_fk
 FOREIGN KEY (participant_id)
-REFERENCES ephemeral.provider (id)
+REFERENCES ephemeral.participant (id)
 ON DELETE RESTRICT
 ON UPDATE CASCADE
 NOT DEFERRABLE;
