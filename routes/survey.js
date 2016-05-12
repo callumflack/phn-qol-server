@@ -43,32 +43,94 @@ router
             
             deviceModel
                 .verifyToken(auth)
-                .then((deviceTokenData) => deviceInfo = deviceTokenData)
-                .catch((err) => errors.push(err));
+                .then(validateSubmission)
+                .then(storeSubmission)
+                .catch((err) => errors.push(err))
+                
+            /**
+             * Validates the data submitted using the SurveyModel model, using
+             * the Promise.reject method to catch any validation issues.
+             * If the submitted data is correct (along with the device token
+             * supplied from the previous method) then the method resolves an
+             * object containing all three necessary parts for submission ({
+             * survey, participant, device }).
+             * @param {Device}  Takes the payload of a device token, derived
+             *                  during the verification process.
+             * @returns {Promise.Submission}    Returns a Promise that resolves
+             *                                  to a Submission object, with the
+             *                                  three required data sets for
+             *                                  submission.
+             */
+            function validateSubmission(deviceTokenPayload) {
+                return new Promise(
+                    function(resolve, reject) {
+                        if ( ! submission.survey)
+                            errors.push(
+                                {
+                                    code: "missing_survey", 
+                                    description: "Fatal: missing survey object in request."
+                                }
+                            );
+                        if ( ! submission.participant)
+                            errors.push(
+                                {
+                                    code: "missing_participant", 
+                                    description: "Fatal: missing participant object in request."
+                                }
+                            );
 
-            if ( ! submission.survey)
-                errors.push(
-                    {
-                        code: "missing_survey", 
-                        description: "Fatal: missing survey object in request."
+                        if (errors.length) {
+                            var combinedErrors = new Error("Multiple errors.");
+                            combinedErrors.code = "multiple_errors";
+                            combinedErrors.errors = errors;
+                            reject(combinedErrors);
+                            return;
+                        }
+                        
+                        validation = surveyModel.validate(submission);
+                        if ( ! validation.isValid) {
+                            res.json({ errors: validation });
+                            reject(validation);
+                        }
+                        
+                        resolve({
+                            survey: validation.survey,
+                            participant: validation.participant,
+                            device: deviceTokenPayload
+                        })
                     }
                 );
-            if ( ! submission.participant)
-                errors.push(
-                    {
-                        code: "missing_participant", 
-                        description: "Fatal: missing participant object in request."
-                    }
-                );
-            if (errors.length)
-                return res.json({ errors: errors });
-            
-            validation = surveyModel.validate(submission);
-            if (validation.length) {
-                return res.json({ errors: validation });
             }
-
-            res.json(submission);
+            
+            /**
+             * Calls the SurveyModel.storeSubmission method, forwarding the
+             * output to the client (using the Express.res object).
+             * @param {Submission} submission   A validated submission object
+             *                                  that will be stored in the
+             *                                  database.
+             */
+            function storeSubmission(submission) {
+                return new Promise(
+                    function(resolve, reject) {
+                        surveyModel
+                            .storeSubmission(submission)
+                            .then(function(result) {
+                                resolve(res.json({ success: result }));
+                            })
+                            .catch(function(err) {
+                                console.error(err);
+                                reject(err);
+                            });
+                    }
+                );
+            }
+            
+            /**
+             * Reports system (not validation) errors.
+             */
+            function reportErrors() {
+                res.json({ errors: errors });
+            }
         }
     );
 
