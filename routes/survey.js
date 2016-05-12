@@ -115,7 +115,14 @@ router
                         surveyModel
                             .storeSubmission(submission)
                             .then(function(result) {
-                                resolve(res.json({ success: result }));
+                                resolve(
+                                    res.json(
+                                        {
+                                            success: true,
+                                            submission: result 
+                                        }
+                                    )
+                                );
                             })
                             .catch(function(err) {
                                 console.error(err);

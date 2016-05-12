@@ -240,7 +240,12 @@ var SurveyModel = {
                             .catch((err) => console.error(err))
                         );
                     });
-                    return t.batch(submissionRows);
+                    return t.batch(submissionRows)
+                        .then(function() {
+                            return new Promise(function(resolve) {
+                                resolve({submissionId: submissionRow.id });
+                            });
+                        });
                 })
                 .catch((err) => console.log(err));
             });
