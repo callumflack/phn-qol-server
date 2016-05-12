@@ -142,13 +142,6 @@ ON DELETE RESTRICT
 ON UPDATE CASCADE
 NOT DEFERRABLE;
 
-ALTER TABLE ephemeral.submission ADD CONSTRAINT participant_submission_fk
-FOREIGN KEY (participant_id)
-REFERENCES ephemeral.participant (id)
-ON DELETE RESTRICT
-ON UPDATE CASCADE
-NOT DEFERRABLE;
-
 ALTER TABLE ephemeral.question_response ADD CONSTRAINT submission_question_response_fk
 FOREIGN KEY (submission_id)
 REFERENCES ephemeral.submission (id)

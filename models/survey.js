@@ -262,7 +262,7 @@ var SurveyModel = {
         return new Promise(function(resolve, reject) {
             var ageParts = ageGroup.split('–'),
                 ageAverage;
-
+            
             if (ageParts.length === 1)
                 ageAverage = parseInt(ageParts[0]);
             if (ageParts.length === 2)

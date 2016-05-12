@@ -32,18 +32,17 @@ module.exports = function() {
                 });
         });
         
-        it('HTTP1.1/POST `/survey`', (done) => {
-            this.timeout(5000);
-            request(app)
-                .post('/survey')
-                .expect(200)
-                .expect('Content-Type', /json/)
-                .end(function(err, res) {
-                    responseBody = res.body;
-                    assert.isNull(err);
-                    assert.isObject(responseBody);
-                    done();
-                });
-        });        
+        // it('HTTP1.1/POST `/survey`', (done) => {
+        //     this.timeout(5000);
+        //     request(app)
+        //         .post('/survey')
+        //         .expect(400)
+        //         .expect('Content-Type', /json/)
+        //         .end(function(err, res) {
+        //             responseBody = res.body;
+        //             assert.isNotNull(err);
+        //             done();
+        //         });
+        // });        
     });
 }

@@ -149,46 +149,46 @@ module.exports = function() {
         done();
     });
     
-    it('Store a submission', function(done) {
-        this.timeout(5000);
-        var survey = require(path.join(projectDir, './models/survey'));
-        var validation,
-            questions = QUESTION_IDS.slice(0),
-            surveyResponses = [],
-            submission = {
-                participant: {
-                    gender: "female",
-                    ageGroup: 3,
-                    education: "University (Tertiary)",
-                    indigenous: true,
-                    region: "Croydon",
-                    sessionNumber: 1
-                },
-                device: {
-                    uuid: "custom-entered-manually-2",
-                    provider: {
-                        id: 2
-                    }
-                }
-            }
+    // it('Store a submission', function(done) {
+    //     this.timeout(5000);
+    //     var survey = require(path.join(projectDir, './models/survey'));
+    //     var validation,
+    //         questions = QUESTION_IDS.slice(0),
+    //         surveyResponses = [],
+    //         submission = {
+    //             participant: {
+    //                 gender: "female",
+    //                 ageGroup: "25–34",
+    //                 education: "University (Tertiary)",
+    //                 indigenous: true,
+    //                 region: "Croydon",
+    //                 sessionNumber: 1
+    //             },
+    //             device: {
+    //                 uuid: "custom-entered-manually-2",
+    //                 provider: {
+    //                     id: 2
+    //                 }
+    //             }
+    //         }
             
-        questions.forEach(
-            (questionId) => surveyResponses.push({
-                questionId: questionId,
-                response: Math.floor(Math.random()*5)
-            })
-        );
+    //     questions.forEach(
+    //         (questionId) => surveyResponses.push({
+    //             questionId: questionId,
+    //             response: Math.floor(Math.random()*5)
+    //         })
+    //     );
         
-        submission.survey = surveyResponses;
+    //     submission.survey = surveyResponses;
 
-        survey
-            .storeSubmission(submission)
-            .then(function(result) {
-                done();
-            })
-            .catch(function(err) {
-                console.error(err);
-                done(err);
-            });
-    });
+    //     survey
+    //         .storeSubmission(submission)
+    //         .then(function(result) {
+    //             done();
+    //         })
+    //         .catch(function(err) {
+    //             console.error(err);
+    //             done(err);
+    //         });
+    // });
 }
