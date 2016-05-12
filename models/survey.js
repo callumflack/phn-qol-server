@@ -279,7 +279,7 @@ var SurveyModel = {
             return db.one(
                 `
                     SELECT id, min, max
-                    FROM development.age_bracket
+                    FROM schema_name.age_bracket
                     WHERE max >= $1
                     ORDER BY max ASC
                     LIMIT 1
@@ -287,7 +287,10 @@ var SurveyModel = {
                 [ ageAverage ]
             )
             .then(returnAgeRowId)
-            .catch((err) => reject(err));
+            .catch(function(err) {
+                console.error(err);
+                reject(err);
+            });
             
             function returnAgeRowId(ageBracketRow) {
                 resolve(ageBracketRow.id);
