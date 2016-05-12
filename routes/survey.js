@@ -45,7 +45,7 @@ router
                 .verifyToken(auth)
                 .then(validateSubmission)
                 .then(storeSubmission)
-                .catch((err) => errors.push(err))
+                .catch(reportErrors);
                 
             /**
              * Validates the data submitted using the SurveyModel model, using
@@ -128,7 +128,8 @@ router
             /**
              * Reports system (not validation) errors.
              */
-            function reportErrors() {
+            function reportErrors(errors) {
+                res.status(400);
                 res.json({ errors: errors });
             }
         }
