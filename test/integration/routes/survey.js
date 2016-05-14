@@ -34,7 +34,7 @@ module.exports = function() {
                 });
         });
         
-        it('HTTP1.1/POST `/survey`', (done) => {
+        it('HTTP1.1/POST `/survey`', function(done) {
             var surveyResponses = [],
                 submission = {
                     participant: {
