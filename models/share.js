@@ -53,14 +53,25 @@ var ShareModel = {
      *                          score categories.
      */
     getScores: function(submissionId) {
-        return new Promise(function(resolve, reject) {
-            resolve({
-                a: 100,
-                b: 40,
-                c: 30,
-                d: 98
+        return surveyModel
+            .getSurveySubmission(submissionId)
+            .then(assessSubmision);
+
+        function assessSubmision(submission) {
+            return new Promise(function(resolve, reject) {
+                var survey = submission.survey,
+                    questionResponses = [],
+                    scores;
+                
+                survey.map(function(responseObj) {
+                    questionResponses.push(responseObj.response);
+                });
+                
+                scores = surveyModel.calculateScores(questionResponses);
+                
+                resolve(scores);
             });
-        });
+        }
     },
     /**
      * Sends an SMS to the supplied number by calling the send API endpoint on

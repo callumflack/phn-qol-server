@@ -252,6 +252,125 @@ var SurveyModel = {
         }
     },
     /**
+     * Uses the supplied submission ID to retreive the submission along with the
+     * participant details and responses to each question.
+     * @param {Number} submissionId The ID of the submission stored in the
+     *                              database.
+     * @return {Promise.Submission} Returns a Submission object with the survey
+     *                              and Participant components furnished, along
+     *                              with some meta data.
+     */
+    getSurveySubmission: function(submissionId) {
+        var dbConn = require('../util/db-conn'),
+            db = dbConn.db,
+            submissionId = parseInt(submissionId),
+            submission = {};
+        
+        return db.one(
+            `
+                SELECT *
+                FROM schema_name.submission
+                WHERE id = $1
+            `.replace(/schema_name/g, dbConn.schema),
+            [
+                submissionId
+            ]
+        )
+        .then(parseSubmission)
+        .then(getParticipant)
+        .then(getResponses);
+        
+        /**
+         * Creates a Submission object from a retrieved row from the database.
+         */
+        function parseSubmission(submissionRow) {
+            return new Promise(function(resolve, reject) {
+                resolve({
+                    id: submissionRow.id,
+                    date: new Date(submissionRow.time),
+                    participantId: submissionRow.participant_id,
+                    providerId: submissionRow.provider_id
+                })    
+            });
+        }
+        
+        /**
+         * Retrieves the participant data from the database and wraps it in a
+         * new Submission object.
+         */
+        function getParticipant(submission) {
+            return db.one(
+                `
+                    SELECT *
+                    FROM schema_name.participant
+                    WHERE id = $1
+                `.replace(/schema_name/g, dbConn.schema),
+                [
+                    submission.participantId
+                ]
+            )
+            .then(parseParticipant);
+            
+            /**
+             * Creats a Participant object from a row retreived from the
+             * database.
+             */
+            function parseParticipant(participantRow) {
+                return new Promise(function(resolve, reject) { 
+                   submission.participant = {
+                       id: participantRow.id,
+                       gender: participantRow.gender,
+                       education: participantRow.education,
+                       ageBracket: participantRow.age_bracket_id,
+                       indigenous: participantRow.indigenous,
+                       sessionNumber: participantRow.session_number
+                   };
+                   
+                   resolve(submission);
+                });
+            }
+        }
+        
+        /**
+         * Furnishes a Submission object with question responses (each response
+         * in the domain [0, 4]). This expects the `submission.id` field is
+         * already in place.
+         */
+        function getResponses(submission) {
+            return db.many(
+                `
+                    SELECT *
+                    FROM schema_name.question_response
+                    WHERE submission_id = $1
+                    ORDER BY question_id ASC
+                `.replace(/schema_name/g, dbConn.schema),
+                [
+                    submission.id
+                ]
+            )
+            .then(parseResponses);
+            
+            /**
+             * Iterates through the results, assembling them into a well-formed
+             * QuestionResponse array.
+             */
+            function parseResponses(responseRows) {
+                return new Promise(function(resolve, reject) { 
+                    var survey = [];
+
+                    responseRows.map(function(response) {
+                        survey.push({
+                            questionId: response.question_id,
+                            response: response.response
+                        });
+                    });
+                    submission.survey = survey;
+                    resolve(submission);
+                });
+            }
+        }
+    },
+    /**
      * Takes an age group as a string, resolving it to an available age group 
      * in the database table `age_bracket`.
      * @param {String} ageGroup Takes the age group as submitted, typically this
