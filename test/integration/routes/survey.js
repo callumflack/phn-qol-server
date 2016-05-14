@@ -65,11 +65,11 @@ module.exports = function() {
                 .set('Content-type', 'application/json')
                 .set('Device-token', process.env.DEVICE_TOKEN)
                 .send(submission)
-                .expect(400)
+                .expect(200)
                 .expect('Content-Type', /json/)
                 .end(function(err, res) {
                     responseBody = res.body;
-                    assert.isNotNull(err);
+                    assert.isNull(err);
                     done();
                 });
         });        
