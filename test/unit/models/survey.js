@@ -170,7 +170,7 @@ module.exports = function() {
                         id: 2
                     }
                 }
-            }
+            };
             
         questions.forEach(
             (questionId) => surveyResponses.push(

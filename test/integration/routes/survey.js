@@ -14,6 +14,8 @@ const assert = chai.assert;
 const projectPath = path.join(__dirname, '../../../');
 const app = require(path.join(projectPath, './app.js'));
 
+const NUM_QUESTIONS = 26;
+
 var responseBody;
 
 module.exports = function() {
@@ -32,17 +34,44 @@ module.exports = function() {
                 });
         });
         
-        // it('HTTP1.1/POST `/survey`', (done) => {
-        //     this.timeout(5000);
-        //     request(app)
-        //         .post('/survey')
-        //         .expect(400)
-        //         .expect('Content-Type', /json/)
-        //         .end(function(err, res) {
-        //             responseBody = res.body;
-        //             assert.isNotNull(err);
-        //             done();
-        //         });
-        // });        
+        it('HTTP1.1/POST `/survey`', (done) => {
+            var surveyResponses = [],
+                submission = {
+                    participant: {
+                        gender: "female",
+                        ageGroup: "25–34",
+                        education: "University (Tertiary)",
+                        indigenous: true,
+                        region: "Croydon",
+                        sessionNumber: 1
+                    },
+                    device: {
+                        uuid: "custom-entered-manually-2",
+                        provider: {
+                            id: 2
+                        }
+                    }
+                };
+            
+            for (var i = 0; i < NUM_QUESTIONS; i++)
+                surveyResponses.push(Math.floor(Math.random()*5));
+
+            submission.survey = surveyResponses;
+
+            this.timeout(5000);
+            request(app)
+                .post('/survey')
+                .set('Accept', 'application/json')
+                .set('Content-type', 'application/json')
+                .set('Device-token', process.env.DEVICE_TOKEN)
+                .send(submission)
+                .expect(400)
+                .expect('Content-Type', /json/)
+                .end(function(err, res) {
+                    responseBody = res.body;
+                    assert.isNotNull(err);
+                    done();
+                });
+        });        
     });
 }

@@ -77,6 +77,7 @@ module.exports = function() {
                     responseBody = res.body;
                     assert.isObject(responseBody);
                     assert.isString(responseBody.token);
+                    process.env.DEVICE_TOKEN = responseBody.token;
                     done();
                 });
         });
