@@ -23,6 +23,8 @@ The following environment variables are necessary for the application to functio
  * `JWT_KEY` - A signing key for any issued JWT tokens.
  * `SERVER_URL` - Used by JWT tokens to verify issuing authenticity. If a client supplies a JWT token that bears an issuer (`payload.iss`) that is different to this environment variable, it is regarded as invalid.
  * `CLIENT_URL` - Used by JWT tokens to verify viable targets. If a client sends a request from a location other than the domain of this value (denoted in the JWT's `payload.aud`), it is regarded as invalid.
+ * `TDEV_API_KEY` - The Telstra DEV API access key required for the SMS service.
+ * `TDEV_API_SECRET` - The Telstra DEV API access corresponding secret.
  
 ## Optional environment variables
 These may be supplied, but if not, default values are used in their place.

@@ -11,8 +11,12 @@
  * @version 0.1.0
  */
 var surveyModel = require('./survey');
+var rp = require('request-promise');
 
 var EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+var TDEV_TOKEN_URL = "https://api.telstra.com/v1/oauth/token";
+var TDEV_SMS_URL = "https://api.telstra.com/v1/sms/messages"
 
 var ShareModel = {
     /**
@@ -85,17 +89,96 @@ var ShareModel = {
      *                              FALSE if not.
      */
     sendSms: function(submissionId, phoneNum) {
+        var scores;
+
         return this.getScores(submissionId)
+            .then(function(retrievedScores) { scores = retrievedScores; })
+            .then(this.getTdevToken)
             .then(issueSmsSendRequest);
 
         /**
          * Simple request to the Telstra SMS API in order to send a message. 
          */
-        function issueSmsSendRequest(scores) {
+        function issueSmsSendRequest(tdevToken) {
+            var smsSendRequest = {
+                uri: TDEV_SMS_URL,
+                method: 'POST',
+                body: {
+                    to: phoneNum,
+                    body: "Your scores: " + JSON.stringify(scores)
+                },
+                headers: {
+                    "Content-type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + tdevToken
+                },
+                json: true
+            };
+
+            return rp(smsSendRequest);
+        }
+    },
+    /**
+     * Telstra's SMS API requires both the API key / secret pair and separately
+     * a token exchanged for the key/secret which is valid for a set amount of
+     * time.
+     * This method manages the state of the access token, requesting a new one
+     * if the last one has expired or does not exist.
+     */
+    getTdevToken: function() {
+        var token = process.env["TDEV_ACCESS_TOKEN"],
+            tokenExpiry = process.env["TDEV_ACCESS_TOKEN_EXP"];
+        
+        if (token === undefined || isNaN(tokenExpiry))
+            return getNewToken();
+
+        return validateToken()
+            .catch(getNewToken);
+        
+        /**
+         * Simple timestamp check (JavaScript's milliseconds from epoch) to see
+         * if a new token is necessary.
+         */
+        function validateToken() {
             return new Promise(function(resolve, reject) {
-                resolve("Sent SMS to " + phoneNum);
+                tokenExpiry = parseInt(tokenExpiry);
+                if (tokenExpiry >= Date.now())
+                    reject();
+                resolve(token);
             });
         }
+        
+        /**
+         * Applies to the TDEV API to retrieve a new token for the SMS API,
+         * exporting the resultant access token and its expiry time (converted
+         * into milliseconds from epoch) as an evironment variable.
+         */
+        function getNewToken() {
+            var tdevTokenRequest = {
+                uri: TDEV_TOKEN_URL,
+                qs: {
+                    client_id: process.env.TDEV_API_KEY,
+                    client_secret: process.env.TDEV_API_SECRET,
+                    grant_type: "client_credentials",
+                    scope: "SMS"
+                },
+                json: true
+            };
+
+            return rp(tdevTokenRequest)
+                .then(storeToken);
+            
+            function storeToken(tokenData) {
+                var token = tokenData.access_token,
+                    expiry = Math.floor( Date.now() / 1000 ) + tokenData.expiry;
+
+                process.env.TDEV_ACCESS_TOKEN = token;
+                process.env.TDEV_ACCESS_TOKEN_EXP = expiry * 1000;
+                
+                return new Promise(function(resolve) { resolve(token); });
+            }
+        }
+        
     },
     /**
      * Compiles and sends an email to the supplied email address using an
