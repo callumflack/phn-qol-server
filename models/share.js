@@ -68,7 +68,7 @@ var ShareModel = {
                     scores;
                 
                 survey.map(function(responseObj) {
-                    questionResponses.push(responseObj.response);
+                    questionResponses.push(responseObj.response - 1);
                 });
                 
                 scores = surveyModel.calculateScores(questionResponses);
