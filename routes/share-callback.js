@@ -19,6 +19,8 @@ router
          * responses.
          */
         (req, res, next) => {
+            console.log(res.headers);
+            console.log(res.body);
             res.json({ result: "thank you." });
         }
     );

@@ -301,6 +301,59 @@ var SurveyModel = {
                 resolve(ageBracketRow.id);
             }
         });
+    },
+    /**
+     * Takes a series of question responses and uses them to calculate the WHO
+     * evaluated scores for Quality of Life. This method assumes that question
+     * responses are well-ordered according to the question number.
+     * This method also exists on the client-side, separately (see file
+     * `./app/components/ui-Survey/Survey.js` in phn-qol-survey repository).
+     * @param {Number[]} responses  An array of question responses ordered by
+     *                              question ID.
+     * @returns {Number}    Returns an object with the score for each category
+     *                      based on the responses provided.
+     */
+    calculateScores: function(responses) {
+        var scores = {
+				physical: [],
+				psychologocial: [],
+				social: [],
+				environment: []
+			},
+			numQuestions = responses.length;
+
+		for (var i = 0; i < numQuestions; i++) {
+            // Translate [0, 4] -> [1, 5]
+			var questionResponse = responses[i] + 1;
+			switch (i) {
+				case 2: case 3: case 25:
+					// Negatively framed questions
+					questionResponse = 5 - questionResponse;
+					break;
+				case 2: case 3: case 9: case 14: case 15: case 16: case 17:
+					scores.physical.push(questionResponse);
+					break;
+				case 4: case 5: case 6: case 10: case 18: case 25:
+					scores.psychologocial.push(questionResponse);
+					break;
+				case 19: case 20: case 21:
+					scores.social.push(questionResponse);
+					break;
+				case 7: case 8: case 11: case 12: case 13: case 22: case 23:
+				case 24:
+					scores.environment.push(questionResponse);
+					break;
+			}
+		}
+		var average = (a) => 
+			{ var t=0, i=0; for (;i<a.length;i++) t+=a[i]; return t/a.length; } 
+		
+		return {
+			physical: average(scores.physical),
+			psychologocial: average(scores.psychologocial),
+			social: average(scores.social),
+			environment: average(scores.environment)
+		}
     }
 };
 

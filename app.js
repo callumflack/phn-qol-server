@@ -37,6 +37,7 @@ var routes = require('./routes/index');
 var questionsRoute = require('./routes/questions');
 var surveyRoute = require('./routes/survey');
 var deviceRoute = require('./routes/device');
+var shareRoute = require('./routes/share');
 var shareCallbackRoute = require('./routes/share-callback');
 
 var cors = require('cors')
@@ -70,6 +71,7 @@ app.use('/', routes);
 app.use('/questions/', questionsRoute);
 app.use('/survey/', surveyRoute);
 app.use('/device/', deviceRoute);
+app.use('/share/', shareRoute);
 app.use('/share-callback/', shareCallbackRoute);
 
 // catch 404 and forward to error handler
