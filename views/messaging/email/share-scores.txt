@@ -1,0 +1,21 @@
+Your NQPHN Quality of Life survey score
+================================================================================
+
+PHN NORTH QUEENSLAND
+An Australian Government Initiative
+
+As requested, here's your score from the NQPHN Quality of Life survey that
+you've just completed.
+
+Physical Health: {{scores.physical}}% (average: 73.5%)
+Psychological: {{scores.psych}}% (average: 70.6%)
+Social: {{scores.social}}% (average: 71.5%)
+Environmental: {{scores.environment}}% (average: 75.1%)
+
+You can take the test whenever you visit a NQPHN service providers, so you can
+check your progress over time. For more info, check out 
+www.primaryhealth.com.au/quality-of-life-survey or call us on 1300 PRIMARY.
+
+Please note that this survey is anonymous: we do not record any personal
+information. If you have any feedback on the survey, please email 
+qolsurvey@primaryhealth.com.au or call the phone number above.

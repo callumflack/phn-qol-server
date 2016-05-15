@@ -12,6 +12,7 @@
  */
 var surveyModel = require('./survey');
 var rp = require('request-promise');
+var fs = require('fs');
 
 var EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 var PHONE_REGEX = /^[0-9]{10}|\+61[0-9]{8,9}|00[0-9]{8,9}$/;
@@ -19,7 +20,13 @@ var PHONE_REGEX = /^[0-9]{10}|\+61[0-9]{8,9}|00[0-9]{8,9}$/;
 var TDEV_TOKEN_URL = "https://api.telstra.com/v1/oauth/token";
 var TDEV_SMS_URL = "https://api.telstra.com/v1/sms/messages";
 
-var EMAIL_TEMPLATE = "";
+var EMAIL_TEMPLATES = "./views/messaging/email/share-scores";
+
+/**
+ * @typedef EmailBody
+ * @param {String} html The HTML version of the email message to be sent out.
+ * @param {String} plain    The plaintext version of the email to be sent.
+ */
 
 var ShareModel = {
     /**
@@ -33,6 +40,12 @@ var ShareModel = {
      */
     validateAddress: function(address) {
         return new Promise(function(resolve, reject) {
+            if ( ! address) {
+                var addressError = new Error("Missing address for sharing.");
+                addressError.code = "address_missing";
+                reject(addressError);
+                return;
+            }
             var method;
             if (PHONE_REGEX.test(address))
                 method = "sms";
@@ -43,7 +56,7 @@ var ShareModel = {
             if (method === undefined) {
                 var addressError = new Error(
                     "Could not validate address as email or phone number.");
-                addressError.code = "invalid_address";
+                addressError.code = "address_invalid";
                 reject(addressError);
                 return;
             }
@@ -217,14 +230,60 @@ var ShareModel = {
      */
     sendEmail: function(submissionId, emailAddress) {
         return this.getScores(submissionId)
-            .then(compileEmail);
+            .then(compileEmail)
+            .then(sendEmail);
 
         /**
-         * Assembles our email message using the scores supplied.
+         * Loads the email template files, replacing custom tags with score data
+         * before finally forwarding the `plain` and `html` bodies of the email
+         * to the next handler.
+         * @param {Scores} scores   The scores derived from the user's response.
+         * @returns {Promise.EmailBody} The HTML/plaintext pair of email bodies.
          */
         function compileEmail(scores) {
             return new Promise(function(resolve, reject) {
-                resolve("The email body. Your scores are as follows:" + JSON.stringify(scores));
+                var emailBodies = {};
+
+                // Load each of the template files:
+                fs.readFile(EMAIL_TEMPLATES + '.html', 'UTF8', getPlainText);
+                
+                /**
+                 * Callback for the HTML email file reader. Stores the email
+                 * body in the emailBodies object and proceeds to fetch the
+                 * plaintext email.
+                 */
+                function getPlainText(err, html) {
+                    if (err) { reject(err); return; }
+                    emailBodies.html = html;
+                    fs.readFile(EMAIL_TEMPLATES + '.txt', 'UTF8', gatherEmails);
+                }
+                
+                /**
+                 * Callback for the plain text email file reader. Arranges the
+                 * email bodies into an object, replacing the keywords for score
+                 * results.
+                 */
+                function gatherEmails(err, plain) {
+                    if (err) { reject(err); return; }
+                    emailBodies.plain = plain;
+
+                    var replacements = {
+                        "{{scores.physical}}": Math.round(scores.physical * 20),
+                        "{{scores.psych}}": Math.round(scores.psych * 20),
+                        "{{scores.social}}": Math.round(scores.social * 20),
+                        "{{scores.environment}}": Math.round(scores.environment * 20)
+                    }
+                    
+                    for (var prop in replacements) {
+                        if ( ! replacements.hasOwnProperty(prop)) continue;
+                        emailBodies.html = emailBodies.html
+                            .replace(prop, replacements[prop]);
+                        emailBodies.plain = emailBodies.plain
+                            .replace(prop, replacements[prop]);
+                    }
+
+                    resolve(emailBodies);
+                }
             });
         }
         
@@ -232,7 +291,11 @@ var ShareModel = {
          * Sends the email.
          */
         function sendEmail(emailBody) {
-            return new Promise()
+            return new Promise(function(resolve, reject) {
+                var emailError = new Error("No email service provider.");
+                emailError.code = "not_implemented";
+                reject(emailError);
+            });
         }
     }
 };
