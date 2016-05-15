@@ -51,7 +51,7 @@ var corsWhitelist = [],
 if (process.env.NODE_ENV === "development")
   corsWhitelist.push("http://localhost:8080");
 
-if (SERVER_URL)
+if (clientUrl)
   corsWhitelist.push(clientUrl);
 
 var corsOptions = {
