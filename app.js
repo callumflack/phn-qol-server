@@ -46,13 +46,13 @@ var app = express();
 
 // CORS setup
 var corsWhitelist = [],
-    SERVER_URL = process.env.SERVER_URL;
+    clientUrl = process.env.CLIENT_URL;
 
 if (process.env.NODE_ENV === "development")
   corsWhitelist.push("http://localhost:8080");
 
 if (SERVER_URL)
-  corsWhitelist.push(SERVER_URL);
+  corsWhitelist.push(clientUrl);
 
 var corsOptions = {
   origin: function(origin, callback){
