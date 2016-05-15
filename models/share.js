@@ -14,9 +14,12 @@ var surveyModel = require('./survey');
 var rp = require('request-promise');
 
 var EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+var PHONE_REGEX = /^[0-9]{10}|\+61[0-9]{8,9}|00[0-9]{8,9}$/;
 
 var TDEV_TOKEN_URL = "https://api.telstra.com/v1/oauth/token";
-var TDEV_SMS_URL = "https://api.telstra.com/v1/sms/messages"
+var TDEV_SMS_URL = "https://api.telstra.com/v1/sms/messages";
+
+var EMAIL_TEMPLATE = "";
 
 var ShareModel = {
     /**
@@ -31,7 +34,7 @@ var ShareModel = {
     validateAddress: function(address) {
         return new Promise(function(resolve, reject) {
             var method;
-            if (/^[0-9]{10}|\+61[0-9]{8,9}|00[0-9]{8,9}$/.test(address))
+            if (PHONE_REGEX.test(address))
                 method = "sms";
 
             if (EMAIL_REGEX.test(address))
@@ -92,29 +95,51 @@ var ShareModel = {
         var scores;
 
         return this.getScores(submissionId)
-            .then(function(retrievedScores) { scores = retrievedScores; })
+            .then(prettifyScores)
             .then(this.getTdevToken)
             .then(issueSmsSendRequest);
 
+        function prettifyScores(retrievedScores) {
+            return new Promise(function(resolve) {
+                var prettyScores = {
+                    physical: Math.round(retrievedScores.physical * 20),
+                    psych: Math.round(retrievedScores.psych * 20),
+                    social: Math.round(retrievedScores.social * 20),
+                    environment: Math.round(retrievedScores.environment * 20)
+                }
+                scores = prettyScores;
+                resolve();
+            });
+        }
         /**
          * Simple request to the Telstra SMS API in order to send a message. 
          */
         function issueSmsSendRequest(tdevToken) {
             var smsSendRequest = {
-                uri: TDEV_SMS_URL,
-                method: 'POST',
-                body: {
-                    to: phoneNum,
-                    body: "Your scores: " + JSON.stringify(scores)
+                    uri: TDEV_SMS_URL,
+                    method: 'POST',
+                    body: {
+                        to: phoneNum
+                    },
+                    headers: {
+                        "Content-type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": "Bearer " + tdevToken
+                    },
+                    json: true
                 },
-                headers: {
-                    "Content-type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": "Bearer " + tdevToken
-                },
-                json: true
-            };
+                smsBody;
+            
+            smsBody = [
+                "Your NQPHN Quality of Life survey score:",
+                "1. Physical Health: " + scores.physical + "% (average: 74%)",
+                "2. Psychological: " + scores.psych + "% (71%)",
+                "3. Social: " + scores.social + "% (72%)",
+                "4. Environmental: " + scores.environment + "% (75%)"
+            ].join("\n");
 
+            smsSendRequest.body.body = smsBody;
+            
             return rp(smsSendRequest);
         }
     },

@@ -435,7 +435,7 @@ var SurveyModel = {
     calculateScores: function(responses) {
         var scores = {
 				physical: [],
-				psychologocial: [],
+                psych: [],
 				social: [],
 				environment: []
 			},
@@ -453,7 +453,7 @@ var SurveyModel = {
 					scores.physical.push(questionResponse);
 					break;
 				case 4: case 5: case 6: case 10: case 18: case 25:
-					scores.psychologocial.push(questionResponse);
+					scores.psych.push(questionResponse);
 					break;
 				case 19: case 20: case 21:
 					scores.social.push(questionResponse);
@@ -469,7 +469,7 @@ var SurveyModel = {
 		
 		return {
 			physical: average(scores.physical),
-			psychologocial: average(scores.psychologocial),
+			psych: average(scores.psych),
 			social: average(scores.social),
 			environment: average(scores.environment)
 		}
