@@ -33,11 +33,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
+var compress = require('compression');
 
 var questionsRoute = require('./routes/questions');
 var surveyRoute = require('./routes/survey');
 var deviceRoute = require('./routes/device');
 var shareRoute = require('./routes/share');
+var adminRoute = require('./routes/admin');
 var shareCallbackRoute = require('./routes/share-callback');
 
 var cors = require('cors')
@@ -62,6 +64,7 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(compress());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -80,6 +83,7 @@ app.use('/questions/', questionsRoute);
 app.use('/survey/', surveyRoute);
 app.use('/device/', deviceRoute);
 app.use('/share/', shareRoute);
+app.use('/admin/', adminRoute);
 app.use('/share-callback/', shareCallbackRoute);
 
 // catch 404 and forward to error handler
