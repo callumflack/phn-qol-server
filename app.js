@@ -45,10 +45,18 @@ var cors = require('cors')
 var app = express();
 
 // CORS setup
-var whitelist = ['http://localhost:8080', 'http://phnqolsurvey.surge.sh', 'https://phnqolsurvey.surge.sh'];
+var corsWhitelist = [],
+    SERVER_URL = process.env.SERVER_URL;
+
+if (process.env.NODE_ENV === "development")
+  corsWhitelist.push("http://localhost:8080");
+
+if (SERVER_URL)
+  corsWhitelist.push(SERVER_URL);
+
 var corsOptions = {
   origin: function(origin, callback){
-    var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+    var originIsWhitelisted = corsWhitelist.indexOf(origin) !== -1;
     callback(null, originIsWhitelisted);
   }
 };
