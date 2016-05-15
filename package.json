@@ -28,6 +28,7 @@
     "node-uuid": "^1.4.7",
     "pg-promise": "^3.8.0",
     "request-promise": "^3.0.0",
+    "sendgrid": "^2.0.0",
     "serve-favicon": "~2.3.0",
     "validator": "^5.2.0"
   },

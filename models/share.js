@@ -20,6 +20,8 @@ var PHONE_REGEX = /^[0-9]{10}|\+61[0-9]{8,9}|00[0-9]{8,9}$/;
 var TDEV_TOKEN_URL = "https://api.telstra.com/v1/oauth/token";
 var TDEV_SMS_URL = "https://api.telstra.com/v1/sms/messages";
 
+var SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+
 var EMAIL_TEMPLATES = "./views/messaging/email/share-scores";
 
 /**
@@ -292,9 +294,20 @@ var ShareModel = {
          */
         function sendEmail(emailBody) {
             return new Promise(function(resolve, reject) {
-                var emailError = new Error("No email service provider.");
-                emailError.code = "not_implemented";
-                reject(emailError);
+                var sendgrid = require("sendgrid")(SENDGRID_API_KEY);
+                var email = new sendgrid.Email();
+
+                email.addTo(emailAddress);
+                email.setFrom("admin@primaryhealth.com.au");
+                email.setFromName("Northern Queensland Primary Health Network");
+                email.setSubject("Your NQPHN Quality of Life survey score");
+                email.setHtml(emailBody.html);
+                email.setText(emailBody.plain);
+
+                sendgrid.send(email, function(err, result) {
+                    if (err) { reject(err); return; }
+                    resolve(result);
+                });
             });
         }
     }
