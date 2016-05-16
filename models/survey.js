@@ -405,6 +405,7 @@ var SurveyModel = {
                     SELECT id, min, max
                     FROM schema_name.age_bracket
                     WHERE max >= $1
+                    OR min = $1
                     ORDER BY max ASC
                     LIMIT 1
                 `.replace(/schema_name/g, dbConn.schema),
