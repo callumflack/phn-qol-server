@@ -112,7 +112,8 @@ var AdminModel = {
             JOIN schema_name.participant 
                 ON submission.participant_id = participant.id
             JOIN schema_name.provider ON submission.provider_id = provider.id;`
-            .replace(/schema_name/g, dbConn.schema);
+            .replace(/schema_name/g, dbConn.schema)
+            .replace(/\n/g, "");
 
         return db.many(reportSql);           
     }
